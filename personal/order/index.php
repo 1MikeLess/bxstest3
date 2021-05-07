@@ -6,7 +6,7 @@
       url: '/cat/cart.php',
       type: 'POST',
       dataType: 'json',
-      data: {
+      data: { 
         'METHOD': 'getChart',
       },
       success(response, status, jqXHR) {

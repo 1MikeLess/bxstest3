@@ -14,7 +14,7 @@ if (CModule::includeModule('iblock')) {
 
   $res = CIBlockElement::GetList(Array('SORT' => 'ASC'), $arFilter, false, false, $arSelect);
   while ($element = $res->GetNext()) {
-    $iterator = CIBlockElement::GetProperty(10, $element['ID'], array("sort" => "asc"), Array("CODE" => "PRICE"));
+    $iterator = CIBlockElement::GetProperty(7, $element['ID'], array("sort" => "asc"), Array("CODE" => "PRICE"));
     if ($arProps = $iterator->Fetch()) {
       $price = IntVal($arProps["VALUE"]);
       $priceFormatted = number_format($price, 2, ',', ' ');

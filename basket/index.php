@@ -1,12 +1,18 @@
 <?php require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php') ?>
 
+<?$APPLICATION->IncludeComponent(
+  "bxs:sale.basket.basket",
+  "",
+  array()
+)?>
+
 <script type="text/javascript">
   $(function() {
     $.ajax({
       url: '/cat/cart.php',
       type: 'POST',
       dataType: 'json',
-      data: { 
+      data: {
         'METHOD': 'getChart',
       },
       success(response, status, jqXHR) {

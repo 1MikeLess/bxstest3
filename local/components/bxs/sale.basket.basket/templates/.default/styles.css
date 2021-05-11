@@ -1,0 +1,10 @@
+.basket__make-order {
+  padding: 20px;
+}
+.basket__make-order a {
+  padding: 6px;
+  background-color: orange;
+}
+* {
+  display: none !important;
+}

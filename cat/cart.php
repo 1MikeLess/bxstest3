@@ -2,33 +2,72 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_before.php');//Обязательная строка инициирующая движок Битрикса, но не подключающая шаблон
 
 class CartHandler {
-  private function getCart() {
-    if (!empty($_SESSION['BX_CART'])) {//Проверяем существует ли наша корзина в массиве $_SESSION
-        $arChart= $_SESSION['BX_CART'];//Если да то получаем текущиие данные о корзине
-    } else {
-        $arChart = array();//Если нет присваиваем пустой массив
-    }
-    return $arChart;
-  }
+  // private function getCart() {
+  //   if (!empty($_SESSION['BX_CART'])) {//Проверяем существует ли наша корзина в массиве $_SESSION
+  //       $arChart= $_SESSION['BX_CART'];//Если да то получаем текущиие данные о корзине
+  //   } else {
+  //       $arChart = array();//Если нет присваиваем пустой массив
+  //   }
+  //   return $arChart;
+  // }
 
   public function add() {
     if (!isset($_POST['PRODUCT_ID'])) {
         return array('ERROR' => 'PRODUCT_ID ??');
     }
 
-    $arChart = $this->getCart();
-    $qty = $_POST['QTY'] ?? 1;
+    if (empty($_SESSION['BX_CART'])) $_SESSION['BX_CART'] = array();
 
-    $arChart[$_POST['PRODUCT_ID']]['QTY'] += $_POST['QTY'];
+    if (!isset($_SESSION['BX_CART'][$_POST['PRODUCT_ID']])) {
+      $_SESSION['BX_CART'][$_POST['PRODUCT_ID']] = [
+        'PRODUCT_ID' => $_POST['PRODUCT_ID'],
+        'QTY' => 0,
+      ];
+    }
 
-    return array(
+    $qty = isset($_POST['QTY'])? $_POST['QTY'] : 1;
+    $_SESSION['BX_CART'][$_POST['PRODUCT_ID']]['QTY'] += $qty;
+
+    return $_SESSION['BX_CART'][$_POST['PRODUCT_ID']];
+  }
+
+  public function remove() {
+    if (!isset($_POST['PRODUCT_ID'])) {
+        return array('ERROR' => 'PRODUCT_ID ??');
+    }
+
+    if (empty($_SESSION['BX_CART'])) $_SESSION['BX_CART'] = array();
+    else {
+      unset($_SESSION['BX_CART'][$_POST['PRODUCT_ID']]);
+
+      return true;
+    }
+    return false;
+  }
+
+  public function edit() {
+    if (!isset($_POST['PRODUCT_ID'])) {
+        return array('ERROR' => 'PRODUCT_ID ??');
+    }
+
+    if (empty($_SESSION['BX_CART'])) $_SESSION['BX_CART'] = array();
+    $qty = isset($_POST['QTY'])? $_POST['QTY'] : 1;
+
+    $_SESSION['BX_CART'][$_POST['PRODUCT_ID']]['QTY'] = $qty;
+
+    return [
       'PRODUCT_ID' => $_POST['PRODUCT_ID'],
-      'QTY' => $arChart[$_POST['PRODUCT_ID']]['QTY']
-    );
+      'QTY' => $qty
+    ];
   }
 
   public function getChart() {
-    $arChart = $this->getCart();
+    // $arChart = $this->getCart();
+    if (!empty($_SESSION['BX_CART'])) {//Проверяем существует ли наша корзина в массиве $_SESSION
+        $arChart= $_SESSION['BX_CART'];//Если да то получаем текущиие данные о корзине
+    } else {
+        $arChart = array();//Если нет присваиваем пустой массив
+    }
 
     return $arChart;
   }
